@@ -44,5 +44,3 @@ if __name__ == "__main__":
     tmp = xmlparser.run()
     for item in tmp:
         print item["title"]
-    
-    #read_xml(open('guide.xml','r').read())

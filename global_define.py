@@ -19,3 +19,9 @@ RSS_DIR_LIST = [
 ]
 
 XML_DIR = "./xml/"
+
+XML_NODE_NAME = "item"
+XML_TAG_NAME_TITLE = "title"
+XML_TAG_NAME_LINK = "link"
+XML_TAG_NAME_LIST = ["title","link","pubDate","description"]
+
