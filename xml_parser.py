@@ -10,15 +10,18 @@ class XMLParser:
         self.tag_name_list = tag_name_list
         pass
     
-    def run(self):
+    def _parse(self):
         if self.root:
             node_list = self.root.getiterator(self.node_name)
-            return map(lambda x:self.parse(x), node_list)
+            return map(lambda x:self._parse_node(x), node_list)
         else:
             logger.critical("self.root is none")
             return None
+    def parse(self,xml_file_path):
+        self._fromfile(xml_file_path)
+        return self._parse()
         
-    def parse(self, node):
+    def _parse_node(self, node):
         #print_node(node)
         return_dict = dict()
         for tag_name in self.tag_name_list:
@@ -29,18 +32,17 @@ class XMLParser:
                 return_dict[tag_name] = None
         return return_dict
 
-    def fromstring(self, xml_str):
+    def _fromstring(self, xml_str):
         self.root = ElementTree.fromstring(xml_str)
         pass
     
-    def fromfile(self, file_path):
+    def _fromfile(self, file_path):
         self.root = ElementTree.parse(file_path)
         pass
 
 
 if __name__ == "__main__":
     xmlparser = XMLParser("item",["title","link","pubDate","description"])
-    xmlparser.fromfile("guide.xml")
-    tmp = xmlparser.run()
+    tmp = xmlparser.parse("guide.xml")
     for item in tmp:
         print item["title"]

@@ -17,16 +17,23 @@ class RSSCrawler:
         self.__xml_url_re = re.compile("%s/[^\s]+\.xml" %self.__url_prefix)
         pass
 
+    def run(self):
+        self._crawl_xml(self)
+
     def _crawl_xml(self):
+        xml_path_list = list()
         for url in self.__rss_dir_list:
             try:
                 content = urllib2.urlopen(url, timeout = 20).read()
                 xml_url_list = self.__xml_url_re.findall(content)
                 for url in xml_url_list:
-                    self._download(url)
+                    file_path = self._download(url)
+                    if file_path:
+                        xml_path_list.append(file_path)
             except Exception,e:
                 logger.critical("errors[%s]" %e)
                 exit()
+        return xml_path_list
         
     def _download(self, url):
         download_dir = global_define.XML_DIR
@@ -46,32 +53,19 @@ class RSSCrawler:
 
         wgetcmd = "wget %s --quiet -O %s" %(url,file_path)
         if not subprocess.call(wgetcmd,shell=True):
-            logger.info('wget url[%s] finished.' %url)
+            logger.debug('wget url[%s] finished.' %url)
         else:
             logger.critical('cmd[%s] failed.' %wgetcmd)
             return None
 
         logger.debug('download [%s] successfully' %(url))
+        return os.path.abspath(file_path)
         
-
-    def gen_iter(self):
-        self.init()
-        url_list=self._crawl_sort_url()
-        for url in url_list:
-            ip = self._parse_url_ip(url)
-            day_stamp = self._parse_url_stamp(url)
-            logger.info('url: %s ...' %url)
-            file_path=self._download_unzip(ip,url)
-
-            yield LogFileContext(url,day_stamp,ip,file_path)
-
-            self._update_record(url)
-            logger.debug('_update_record [%s]' %url)
 
 
 if __name__=='__main__':
     crawler=RSSCrawler()
-    crawler._crawl_xml()
+    crawler.run()
         
     
 

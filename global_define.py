@@ -18,6 +18,7 @@ RSS_DIR_LIST = [
     "http://rss.sina.com.cn/baby/index.shtml"
 ]
 
+TEXT_DIR = "./text/"
 XML_DIR = "./xml/"
 
 XML_NODE_NAME = "item"
