@@ -1,3 +1,4 @@
+#coding:utf8
 from xml.etree import ElementTree
 
 from tools import logger

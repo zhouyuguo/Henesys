@@ -7,9 +7,12 @@ from rss_crawler import RSSCrawler
 
 class Main:
     def __init__(self):
+        self.__crawler = RSSCrawler()
         pass
 
     def run(self):
+        self.__crawler._crawl_xml()
+
         pass
 
 
