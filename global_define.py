@@ -20,6 +20,7 @@ RSS_DIR_LIST = [
 
 TEXT_DIR = "./text/"
 XML_DIR = "./xml/"
+INDEX_DIR = "./index/"
 
 XML_NODE_NAME = "item"
 XML_TAG_NAME_TITLE = "title"

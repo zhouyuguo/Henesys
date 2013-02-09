@@ -4,15 +4,15 @@ import global_define
 import time
 from tools import logger
 
-from rss_crawler import RSSCrawler
-from index_builder import IndexBuilder
+from crawler import RSSCrawler
+from builder import IndexBuilder
 from parser import Parser
 
 class Main:
     def __init__(self):
         self.__crawler = RSSCrawler()
         self.__parser = Parser()
-        self.__index_builder = IndexBuilder()
+        self.__builder = IndexBuilder()
         #self.__run_list = list()
         pass
 
@@ -32,10 +32,10 @@ class Main:
         #run()
         
         run = self.wrap(self.__parser.run)
-        run()
-        
-        #run = self.wrap(self.__index_builder.run)
         #run()
+        
+        run = self.wrap(self.__builder.run)
+        run()
         
         pass
 
