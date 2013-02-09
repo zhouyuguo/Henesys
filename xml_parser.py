@@ -26,7 +26,7 @@ class XMLParser:
         return_dict = dict()
         for tag_name in self.tag_name_list:
             tmp = node.find(tag_name)
-            if tmp is not None:
+            if tmp is not None and tmp.text is not None:
                 return_dict[tag_name] = tmp.text.strip()
             else:
                 return_dict[tag_name] = None

@@ -28,10 +28,10 @@ class Main:
 
     def run(self):
         run = self.wrap(self.__crawler.run)
-        #run()
-        
-        run = self.wrap(self.__index_builder.run)
         run()
+        
+        #run = self.wrap(self.__index_builder.run)
+        #run()
         
         pass
 

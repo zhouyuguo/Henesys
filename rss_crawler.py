@@ -18,7 +18,7 @@ class RSSCrawler:
         pass
 
     def run(self):
-        self._crawl_xml(self)
+        self._crawl_xml()
 
     def _crawl_xml(self):
         xml_path_list = list()
