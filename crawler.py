@@ -40,8 +40,8 @@ class RSSCrawler:
         if not os.path.exists(download_dir):
             os.mkdir(download_dir)
 
-        day_stamp = datetime.date.today()
-        download_dir = os.path.abspath(os.path.join(download_dir, str(day_stamp)))
+        day = global_define.TODAY
+        download_dir = os.path.abspath(os.path.join(download_dir, str(day)))
         if not os.path.exists(download_dir):
             os.mkdir(download_dir)
 

@@ -1,3 +1,5 @@
+import datetime
+TODAY = datetime.date.today()
 
 RSS_DIR_LIST = [
     "http://rss.sina.com.cn/news/index.shtml",
@@ -20,7 +22,8 @@ RSS_DIR_LIST = [
 
 TEXT_DIR = "./text/"
 XML_DIR = "./xml/"
-INDEX_DIR = "./index/"
+INDEX_INCREMENTAL_DIR = "./index/incremental/"
+INDEX_PRIME_DIR = "./index/prime/"
 
 XML_NODE_NAME = "item"
 XML_TAG_NAME_TITLE = "title"
