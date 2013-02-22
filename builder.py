@@ -14,7 +14,8 @@ class IncrementalIndexBuilder:
         pass
 
     def _segment(self, sentence):
-        return list(jieba.cut_for_search(sentence))
+        segments_unicode = list(jieba.cut_for_search(sentence))
+        return map(lambda x:x.encode("utf8"), segments_unicode)
 
     def build(self, file_path):
         with open(file_path) as fin:
@@ -45,7 +46,7 @@ class IncrementalIndexBuilder:
     def _build(self, file_path, line_no, segment_list):
         for segment in segment_list:
             self.__index_dict.setdefault(segment,list())
-            self.__index_dict[segment].append("%s#%s" %(file_path, line_no))
+            self.__index_dict[segment].append("%s#%s" %(os.path.abspath(file_path), line_no))
             if len(self.__index_dict) > self.__INDEX_THRESHOLD:
                 self.dump()
         pass

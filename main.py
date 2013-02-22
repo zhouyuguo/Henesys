@@ -29,13 +29,13 @@ class Main:
 
     def run(self):
         run = self.wrap(self.__crawler.run)
-        run()
+        #run()
         
         run = self.wrap(self.__parser.run)
         #run()
         
         run = self.wrap(self.__builder.run)
-        #run()
+        run()
         
         pass
 
