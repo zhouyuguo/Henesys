@@ -37,7 +37,7 @@ class IncrementalIndexBuilder:
         self.__index_file_sum += 1
         index_filename = str(self.__index_file_sum)
         index_filepath = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day), index_filename)
-        functs.dump_utf8(content_str, index_filepath)
+        functs.dump(content_str, index_filepath)
 
         self.__index_dict = dict()
         pass
@@ -64,18 +64,49 @@ class IncrementalIndexBuilder:
 
 class PrimeIndexBuilder:
     def __init__(self):
+        self.__index_dict = dict()
+        
         pass
 
     def run(self, day = global_define.TODAY):
-        
-        
+        self.merge_from_iindex(day)
         pass
 
-    def _merge_from_iindex(self):
+    def dump(self):
+        index_lists = map(lambda x:[x] + self.__index_dict[x], self.__index_dict)
+        index_str_list = map(lambda x:'\t'.join(x) + '\n', index_lists)
+        content_str = ''.join(index_str_list)
+
+        self.__index_file_sum += 1
+        index_filename = str(self.__index_file_sum)
+        index_filepath = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day), index_filename)
+        functs.dump(content_str, index_filepath)
+
+        self.__index_dict = dict()
+        pass
+
+
+    def _merge(self, file_path):
+        with open(file_path, 'r') as fin:
+            for line in fin:
+                tmp = line.strip().split('\t')
+                if tmp and len(tmp) >= 2:
+                    word = tmp[0]
+                    link_list = tmp[1:]
+                    self.__index_dict.setdefault(word, list())
+                    self.__index_dict[word] += link_list
+                else:
+                    logger.critical("line[%s] error" %line)
         
+    def merge_from_iindex(self, day = global_define.TODAY):
+        _dir = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day))
+        file_list = functs.get_files(_dir)
+        for file_path in file_list:
+            self._merge(file_path)     
         pass
 
 
 if __name__ == "__main__":
-    ib = IncrementalIndexBuilder()
+    ib = PrimeIndexBuilder()
+    #ib = IncrementalIndexBuilder()
     ib.run()

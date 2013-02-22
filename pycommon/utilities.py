@@ -1,5 +1,4 @@
 import os
-import codecs
 
 def get_files(dir_path):
     return_list = list()
@@ -8,9 +7,10 @@ def get_files(dir_path):
     return return_list
 
 
-def dump_utf8(file_content, file_path):
+def dump(file_content, file_path):
     _dir = os.path.dirname(file_path)
     if not os.path.exists(_dir):
         os.makedirs(_dir)
-    with codecs.open(file_path, 'wb', 'utf-8') as fout:
+    with open(file_path, 'w') as fout:
         fout.write(file_content)
+

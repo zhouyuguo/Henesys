@@ -23,10 +23,10 @@ class Parser:
         for xml_dict in xml_dicts:
             title = xml_dict[global_define.XML_TAG_NAME_TITLE]
             link = xml_dict[global_define.XML_TAG_NAME_LINK]
-            content_str += "%s\t%s\n" %(title, link)
+            content_str += "%s\t%s\n" %(title.encode('utf8'),link)
         
         file_path = os.path.join(global_define.TEXT_DIR, str(day), file_id_str)
-        functs.dump_utf8(content_str, file_path)
+        functs.dump(content_str, file_path)
 
     def run(self, day = global_define.TODAY):
         _dir = os.path.join(global_define.XML_DIR, str(day))

@@ -32,10 +32,10 @@ class Main:
         run()
         
         run = self.wrap(self.__parser.run)
-        run()
+        #run()
         
         run = self.wrap(self.__builder.run)
-        run()
+        #run()
         
         pass
 
