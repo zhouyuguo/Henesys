@@ -66,11 +66,13 @@ class IncrementalIndexBuilder:
 class PrimeIndexBuilder:
     def __init__(self):
         self.__index_dict = dict()
-        
+        self.__index_file_sum = 0 
         pass
 
     def run(self, day = global_define.TODAY):
-        self.merge_from_iindex(day)
+        self.load_prime_index()
+        self.merge_incremental_index(day)
+        self.dump()
         pass
 
     def dump(self):
@@ -80,12 +82,16 @@ class PrimeIndexBuilder:
 
         self.__index_file_sum += 1
         index_filename = str(self.__index_file_sum)
-        index_filepath = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day), index_filename)
+        index_filepath = os.path.join(global_define.INDEX_PRIME_DIR, index_filename)
         functs.dump(content_str, index_filepath)
 
         self.__index_dict = dict()
         pass
 
+    def load_prime_index(self):
+        file_list = functs.get_files(global_define.INDEX_PRIME_DIR)
+        for file_path in file_list:
+            self._merge(file_path)
 
     def _merge(self, file_path):
         with open(file_path, 'r') as fin:
@@ -94,12 +100,15 @@ class PrimeIndexBuilder:
                 if tmp and len(tmp) >= 2:
                     word = tmp[0]
                     link_list = tmp[1:]
+                    link_list = map(lambda x:x.strip(), link_list)
                     self.__index_dict.setdefault(word, list())
-                    self.__index_dict[word] += link_list
+                    for link in link_list:
+                        if link not in self.__index_dict[word]:
+                            self.__index_dict[word].append(link)
                 else:
                     logger.critical("line[%s] error" %line)
         
-    def merge_from_iindex(self, day = global_define.TODAY):
+    def merge_incremental_index(self, day = global_define.TODAY):
         _dir = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day))
         file_list = functs.get_files(_dir)
         for file_path in file_list:
