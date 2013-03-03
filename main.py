@@ -6,13 +6,15 @@ from tools import logger
 
 from crawler import RSSCrawler
 from builder import IncrementalIndexBuilder
+from builder import PrimeIndexBuilder
 from parser import Parser
 
 class Main:
     def __init__(self):
         self.__crawler = RSSCrawler()
         self.__parser = Parser()
-        self.__builder = IncrementalIndexBuilder()
+        self.__iibuilder = IncrementalIndexBuilder()
+        self.__pibuilder = PrimeIndexBuilder()
         #self.__run_list = list()
         pass
 
@@ -29,14 +31,16 @@ class Main:
 
     def run(self):
         run = self.wrap(self.__crawler.run)
-        #run()
-        
-        run = self.wrap(self.__parser.run)
-        #run()
-        
-        run = self.wrap(self.__builder.run)
         run()
         
+        run = self.wrap(self.__parser.run)
+        run()
+        
+        run = self.wrap(self.__iibuilder.run)
+        run()
+        
+        run = self.wrap(self.__pibuilder.run)
+        run()
         pass
 
 

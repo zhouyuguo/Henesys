@@ -33,6 +33,7 @@ class RSSCrawler:
             except Exception,e:
                 logger.critical("errors[%s]" %e)
                 exit()
+            time.sleep(2)
         return xml_path_list
         
     def _download(self, url):
@@ -51,14 +52,14 @@ class RSSCrawler:
         file_name = file_name.replace("/","")
         file_path = os.path.join(download_dir, file_name)
 
-        wgetcmd = "wget %s --quiet -O %s" %(url,file_path)
+        wgetcmd = "wget %s --timeout=10 --quiet -O %s" %(url,file_path)
         if not subprocess.call(wgetcmd,shell=True):
             logger.debug('wget url[%s] finished.' %url)
         else:
             logger.critical('cmd[%s] failed.' %wgetcmd)
             return None
 
-        logger.debug('download [%s] successfully' %(url))
+        logger.info('download [%s] successfully' %(url))
         return os.path.abspath(file_path)
         
 

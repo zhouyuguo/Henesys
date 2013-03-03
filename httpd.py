@@ -1,5 +1,6 @@
 import urlparse
 import BaseHTTPServer
+import global_define
 from tools import logger
 import utilities as functs
 
@@ -26,7 +27,7 @@ class MyHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         pass
 
     def load_index(self):
-        files = functs.get_files('./index/')
+        files = functs.get_files(global_define.INDEX_PRIME_DIR)
         _index_dict = dict()
         for file_path in files:
             with open(file_path,'r') as fin:
