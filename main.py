@@ -15,7 +15,6 @@ class Main:
         self.__parser = Parser()
         self.__iibuilder = IncrementalIndexBuilder()
         self.__pibuilder = PrimeIndexBuilder()
-        #self.__run_list = list()
         pass
 
     def wrap(self, func):
