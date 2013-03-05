@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding:utf8
 import urlparse
 import BaseHTTPServer
 import global_define
