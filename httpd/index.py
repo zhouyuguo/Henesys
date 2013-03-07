@@ -26,12 +26,6 @@ class IndexDict(dict):
     def run(self):
         pass
 
-    def _parse(self, (file_path, line_no)):
-        for i,line in enumerate(open(file_path,"r")):
-            if i == line_no - 1:
-                return map(lambda x:x.strip(), line.split("\t"))
-        logger.critical("get line error")
-        return ("","")
 
 indexDict = IndexDict()
 
