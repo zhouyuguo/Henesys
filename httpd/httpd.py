@@ -1,20 +1,27 @@
 #!/usr/bin/python
 #coding:utf8
+
+import sys,os
+p = os.path.abspath(".")
+if p not in sys.path:
+    sys.path.insert(0,p)
 import urlparse
 import BaseHTTPServer
 import global_define
 from tools import logger
 import utilities as functs
+import index
 
 class MyHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
-        self.__index_dict = self.load_index()
+        self.__get_k = "s"
+        #self.__index_dict = Index
         BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, request, client_address, server)
         
     def do_GET(self):
         res = urlparse.urlparse(self.path)
         params = urlparse.parse_qs(res.query, True)
-        res = self.search(params['s'][0])
+        res = self.search(params[self.__get_k][0])
         self.wfile.write(res)
         pass
 
@@ -28,27 +35,15 @@ class MyHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 print key,_dict[key]
         pass
 
-    def load_index(self):
-        files = functs.get_files(global_define.INDEX_PRIME_DIR)
-        _index_dict = dict()
-        for file_path in files:
-            with open(file_path,'r') as fin:
-                for line in fin:
-                    tmp = line.split('\t')
-                    word = tmp[0]
-                    _index_dict[word] = tmp[1:]
-        return _index_dict
 
     def search(self, word):
-        temp = map(lambda x:(self.__index_dict[x] if word in x else list()), self.__index_dict)
+        temp = map(lambda x:(index.indexDict[x] if word in x else list()), index.indexDict)
         ret = list()
         for item in temp:
             ret += item
         return ret
 
+
 if __name__ == "__main__":
-    server_class = BaseHTTPServer.HTTPServer
-    handler_class = MyHTTPRequestHandler
-    server_address = ("", 8000)
-    httpd = server_class(server_address, handler_class)
+    httpd = BaseHTTPServer.HTTPServer(("", 8000), MyHTTPRequestHandler)
     httpd.serve_forever()
