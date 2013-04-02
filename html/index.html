@@ -1,51 +1,24 @@
 <!DOCTYPE html>
-<!-- saved from url=(0031)http://zswang.duapp.com/search/ -->
-
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Henesys搜索引擎</title>
 		<link rel="stylesheet" type="text/css" href="files/henesys.css" /> 
-		<script language="javascript" type="text/javascript" src="files/henesys.js"></script>
+		<!--<script language="javascript" type="text/javascript" src="files/henesys.js"></script>-->
 		<script type="text/javascript">
-		function test()
-		{
+		function search(){
 			var keyword = document.getElementById("kw");
 			//alert(keyword.value);
 			//alert(document.location.host);
 			var hf="http://"+document.location.host+":8000/?s="+keyword.value;
 			window.location.href=hf;
-			var strRole;
-			for(var i=0;i<role.length;i++)
-			{
-				if(role.item(i).checked)
-				{
-					strRole=role.item(i).getAttribute("value");
-					break;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			with(document.getElementById("login"))
-			{
-				method="post";
-				if(strRole=="student")
-				{
-					action="/struts_usermgr/login.do?type="+"1";
-				}
-				else if(strRole=="teacher")
-				{
-					action="/struts_usermgr/login.do?type="+"2";
-				}    
-				else if(strRole=="admin")
-				{
-					action="/struts_usermgr/login.do?type="+"3";
-				}   
-				submit();
+		}
+		function enterPress(){
+			if(event.keyCode == 13){
+				search();
 			}
 		}
+		document.onkeydown=enterPress;
 
 		</script>
 	</head>
@@ -67,7 +40,7 @@
 						</span>
 						<span class="s_btn_wr">
 							<!--<input type="submit" value="搜索一下" id="su" class="s_btn" onclick="window.location.href='/cgi-bin/test.py'">-->
-							<input type="submit" value="搜索一下" id="su" class="s_btn" onclick="test();">
+							<input type="submit" value="搜索一下" id="su" class="s_btn" onclick="search();">
 						</span>
 					</div>
 				</div>
