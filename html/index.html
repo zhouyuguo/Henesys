@@ -8,8 +8,6 @@
 		<script type="text/javascript">
 		function search(){
 			var keyword = document.getElementById("kw");
-			//alert(keyword.value);
-			//alert(document.location.host);
 			var hf="http://"+document.location.host+":8000/?s="+keyword.value;
 			window.location.href=hf;
 		}
@@ -29,17 +27,16 @@
 				<div id="u"></div>
 				<div id="m"><p id="lg"><img src="./files/logo.png" width="270" height="129"></p>
 					<p id="nv">
-					<a href="http://zswang.duapp.com/news">网&nbsp;页</a>　
+					<a href="http://www.baidu.com/">网&nbsp;页</a>　
 					<b>新&nbsp;闻</b>　
-					<a href="http://zswang.duapp.com/weibo">微&nbsp;博</a>　
-					<a href="http://zswang.duapp.com/tieba">贴&nbsp;吧</a>　
+					<a href="http://www.baidu.com">微&nbsp;博</a>　
+					<a href="http://www.baidu.com">贴&nbsp;吧</a>　
 					</p>
 					<div id="fm">
 						<span class="s_ipt_wr">
 							<input type="text" name="wd" id="kw" maxlength="100" class="s_ipt">
 						</span>
 						<span class="s_btn_wr">
-							<!--<input type="submit" value="搜索一下" id="su" class="s_btn" onclick="window.location.href='/cgi-bin/test.py'">-->
 							<input type="submit" value="搜索一下" id="su" class="s_btn" onclick="search();">
 						</span>
 					</div>
