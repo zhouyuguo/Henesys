@@ -65,6 +65,7 @@ class IncrementalIndexBuilder:
 
 class PrimeIndexBuilder:
     def __init__(self):
+        self.__PRIME_INDEX_DIR = global_define.INDEX_PRIME_DIR
         self.__index_dict = dict()
         self.__index_file_sum = 0 
         pass
@@ -89,7 +90,7 @@ class PrimeIndexBuilder:
         pass
 
     def load_prime_index(self):
-        file_list = functs.get_files(global_define.INDEX_PRIME_DIR)
+        file_list = functs.get_files(self.__PRIME_INDEX_DIR)
         for file_path in file_list:
             self._merge(file_path)
 
