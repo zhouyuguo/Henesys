@@ -14,3 +14,11 @@ def dump(file_content, file_path):
     with open(file_path, 'w') as fout:
         fout.write(file_content)
 
+def flatten_list(in_list):
+    out_list = list()
+    for item in in_list:
+        if(isinstance(item,(list,tuple))):
+            out_list += flatten_list(item)
+        else:
+            out_list.append(item)
+    return out_list

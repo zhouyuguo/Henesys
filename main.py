@@ -12,7 +12,6 @@ from parser import Parser
 class Main:
     def __init__(self):
         self.__crawler = RSSCrawler()
-        self.__parser = Parser()
         self.__iibuilder = IncrementalIndexBuilder()
         self.__pibuilder = PrimeIndexBuilder()
         pass
@@ -21,7 +20,7 @@ class Main:
         def ret_func():
             logger.info("func [%s.%s] begin ..." %(func.__module__, func.__name__))
             begin_t = datetime.datetime.now()
-            func()
+            func('.')
             end_t = datetime.datetime.now()
             logger.info("func [%s.%s] end ... " %(func.__module__, func.__name__))
             logger.info("consume time %s" %(end_t - begin_t))
@@ -30,16 +29,13 @@ class Main:
 
     def run(self):
         run = self.wrap(self.__crawler.run)
-        run()
-        
-        run = self.wrap(self.__parser.run)
-        run()
+        #run()
         
         run = self.wrap(self.__iibuilder.run)
-        run()
+        #run()
         
         run = self.wrap(self.__pibuilder.run)
-        run()
+        #run()
         pass
 
 

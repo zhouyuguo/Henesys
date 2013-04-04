@@ -25,8 +25,9 @@ XML_DIR = "./xml/"
 INDEX_INCREMENTAL_DIR = "./index/incremental/"
 INDEX_PRIME_DIR = "./index/prime/"
 
+#xml parser
 XML_NODE_NAME = "item"
-XML_TAG_NAME_TITLE = "title"
-XML_TAG_NAME_LINK = "link"
-XML_TAG_NAME_LIST = ["title","link","pubDate","description"]
-
+TITLE_K = "title"
+LINK_K = "link"
+PUBDATE_K = "pubDate"
+DESC_K = "description"

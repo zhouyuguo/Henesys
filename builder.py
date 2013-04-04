@@ -5,62 +5,62 @@ import os
 import datetime
 from tools import logger
 import utilities  as functs
+from parser import Parser
 
 class IncrementalIndexBuilder:
     def __init__(self):
         self.__index_dict = dict()
-        self.__INDEX_THRESHOLD = 1000
+        self.__INDEX_THRESHOLD = 10000
         self.__index_file_sum = 0 #autoincrement
+
+        self.__parser = Parser()
+        self.__TITLE_K = global_define.TITLE_K
+        self.__LINK_K = global_define.LINK_K
         pass
 
     def _segment(self, sentence):
         segments_unicode = list(jieba.cut_for_search(sentence))
         return map(lambda x:x.encode("utf8"), segments_unicode)
 
-    def build(self, file_path):
-        with open(file_path) as fin:
-            for line_no, line in enumerate(fin):
-                tmp_list = line.split('\t')
-                if not tmp_list or len(tmp_list) != 2:
-                    logger.error("split line[%s] error" %line)
-                    continue
-                title = tmp_list[0].strip()
-                link = tmp_list[1].strip()
-                segment_list = self._segment(title)
-                if segment_list :
-                    self._build(file_path, line_no, segment_list)
+    def build(self, file_path, out_dir):
+        xml_dicts = self.__parser.parse(file_path)
+        for xml_dict in xml_dicts:
+            title = xml_dict[self.__TITLE_K]
+            link = xml_dict[self.__LINK_K]
+            segment_list = self._segment(title)
+            for segment in segment_list:
+                self.__index_dict.setdefault(segment,list())
+                self.__index_dict[segment].append((title,link))
+                if len(self.__index_dict) > self.__INDEX_THRESHOLD:
+                    self.dump(out_dir)
     
-    def dump(self, day = global_define.TODAY):
-        index_lists = map(lambda x:[x] + self.__index_dict[x], self.__index_dict)
-        index_str_list = map(lambda x:'\t'.join(x) + '\n', index_lists)
-        content_str = ''.join(index_str_list)
-
+    def dump(self, out_dir):
+        lines = str()
+        for item in self.__index_dict.items():
+            _list = functs.flatten_list(item)
+            _list = map(lambda x:x.encode("utf8") if isinstance(x,unicode) else x, _list)
+            line = '\t'.join(_list) + '\n'
+            lines += line
+            
         self.__index_file_sum += 1
-        index_filename = str(self.__index_file_sum)
-        index_filepath = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day), index_filename)
-        functs.dump(content_str, index_filepath)
+        filename = str(self.__index_file_sum)
+        filepath = os.path.join(out_dir, filename)
+        functs.dump(lines, filepath)
 
         self.__index_dict = dict()
         pass
     
-    def _build(self, file_path, line_no, segment_list):
-        for segment in segment_list:
-            self.__index_dict.setdefault(segment,list())
-            self.__index_dict[segment].append("%s#%s" %(os.path.abspath(file_path), line_no))
-            if len(self.__index_dict) > self.__INDEX_THRESHOLD:
-                self.dump()
-        pass
 
-    def flush(self):
-        self.dump()
+    def flush(self, out_dir):
+        self.dump(out_dir)
         pass
         
-    def run(self, day = global_define.TODAY):
-        _dir = os.path.join(global_define.TEXT_DIR, str(day))
-        file_paths = functs.get_files(_dir)
+    def run(self, in_dir, out_dir):
+        file_paths = functs.get_files(in_dir)
         for file_path in file_paths:
-            self.build(file_path)
-        self.flush()
+            self.build(file_path, out_dir)
+            pass
+        self.flush(out_dir)
         pass
 
 class PrimeIndexBuilder:
@@ -117,6 +117,6 @@ class PrimeIndexBuilder:
 
 
 if __name__ == "__main__":
-    ib = PrimeIndexBuilder()
-    #ib = IncrementalIndexBuilder()
-    ib.run()
+    #ib = PrimeIndexBuilder()
+    ib = IncrementalIndexBuilder()
+    ib.run('./xml','./tmp2')
