@@ -22,3 +22,15 @@ def flatten_list(in_list):
         else:
             out_list.append(item)
     return out_list
+
+def get_relative_path(abspath, absprefix):
+    plen = len(absprefix)
+    if(plen < len(abspath) and abspath[0:plen] == absprefix):
+        ret = abspath[plen:]
+        if(ret[0]=='/'):
+            return ret[1:]
+        else:
+            return ret
+    else:
+        return None
+
