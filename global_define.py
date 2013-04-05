@@ -1,5 +1,5 @@
-import datetime
-TODAY = datetime.date.today()
+#import datetime
+#TODAY = datetime.date.today()
 
 RSS_DIR_LIST = [
     "http://rss.sina.com.cn/news/index.shtml",
@@ -20,11 +20,10 @@ RSS_DIR_LIST = [
     "http://rss.sina.com.cn/baby/index.shtml"
 ]
 
-TEXT_DIR = "./text/"
-XML_DIR = "./xml/"
+XML_DIR = "/home/wyy/data/Henesys/xml"
 INDEX_INCREMENTAL_DIR = "/home/wyy/data/Henesys/index/incremental"
+INDEX_PRIME_DIR = "/home/wyy/data/Henesys/index/prime"
 DATA_DIR = "/home/wyy/data/Henesys/data"
-INDEX_PRIME_DIR = "./index/prime/"
 
 #xml parser
 XML_NODE_NAME = "item"

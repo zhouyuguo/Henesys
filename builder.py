@@ -77,7 +77,7 @@ class PrimeIndexBuilder:
         self.__index_file_sum = 0 
         pass
 
-    def run(self, day = global_define.TODAY):
+    def run(self, day):
         self.load_prime_index()
         self.merge_incremental_index(day)
         self.dump()
@@ -115,7 +115,7 @@ class PrimeIndexBuilder:
                 else:
                     logger.critical("line[%s] error" %line)
         
-    def merge_incremental_index(self, day = global_define.TODAY):
+    def merge_incremental_index(self, day):
         _dir = os.path.join(global_define.INDEX_INCREMENTAL_DIR, str(day))
         file_list = functs.get_files(_dir)
         for file_path in file_list:
