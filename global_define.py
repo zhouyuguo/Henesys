@@ -22,7 +22,8 @@ RSS_DIR_LIST = [
 
 TEXT_DIR = "./text/"
 XML_DIR = "./xml/"
-INDEX_INCREMENTAL_DIR = "./index/incremental/"
+INDEX_INCREMENTAL_DIR = "/home/wyy/data/Henesys/index/incremental"
+DATA_DIR = "/home/wyy/data/Henesys/data"
 INDEX_PRIME_DIR = "./index/prime/"
 
 #xml parser

@@ -4,6 +4,7 @@ import utilities as functs
 from xml_parser import XMLParser
 import datetime
 import os
+import re
 
 class Parser:
     def __init__(self):
@@ -20,6 +21,11 @@ class Parser:
         ]
 
         self.__parser = XMLParser(self.__XML_NODE_NAME, self.__XML_TAG_NAME_LIST)
+
+        self.__line_i = 0
+        self.__file_i = 0
+        self.__str = str()
+        self.__THRESHOLD = 1000
         pass
 
     def parse(self, file_path):
@@ -30,17 +36,29 @@ class Parser:
             logger.error("%s file parse failed. [%s]" %(file_path, e))
         return xml_dicts
 
-    def dump(self, xml_dicts, file_id_str, out_dir):
-        content_str = str() 
-        for xml_dict in xml_dicts:
-            title = xml_dict[self.__XML_TAG_NAME_TITLE]
-            link = xml_dict[self.__XML_TAG_NAME_LINK]
-            pubDate = xml_dict[self.__XML_TAG_NAME_PUBDATE]
-            desc = xml_dict[self.__XML_TAG_NAME_DESC]
-            content_str += "%s\t%s\n" %(title.encode('utf8'),link)
-        
-        file_path = os.path.join(out_dir, file_id_str)
-        functs.dump(content_str, file_path)
+    def dump(self, xml_dict, out_dir):
+        file_abspath = os.path.abspath(os.path.join(out_dir, str(self.__file_i)))
+        line_i = self.__line_i
+        xml_list = map(lambda x:xml_dict[x] if xml_dict[x] else "None", self.__XML_TAG_NAME_LIST)
+        xml_list = map(lambda x:x.encode('utf8') if isinstance(x, unicode) else x, xml_list)
+        xml_list = map(lambda x:re.sub("[\n\t]"," ",x), xml_list)
+        self.__str += '\t'.join(xml_list) + '\n'
+        self.__line_i += 1
+        if self.__line_i >= self.__THRESHOLD:
+            functs.dump(self.__str, file_abspath)
+            self.__line_i = 0
+            self.__str = str()
+            self.__file_i += 1
+            pass
+        return (file_abspath, line_i)
+
+    def flush(self, out_dir):
+        file_path = os.path.join(out_dir, str(self.__file_i))
+        functs.dump(self.__str, file_path)
+        self.__line_i = 0
+        self.__str = str()
+        self.__file_i += 1
+
 
     def run(self, in_dir, out_dir):
         file_paths = functs.get_files(in_dir)

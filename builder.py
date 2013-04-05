@@ -9,6 +9,7 @@ from parser import Parser
 
 class IncrementalIndexBuilder:
     def __init__(self):
+        self.__DATA_ROOT_DIR = global_define.DATA_DIR
         self.__index_dict = dict()
         self.__INDEX_THRESHOLD = 10000
         self.__index_file_sum = 0 #autoincrement
@@ -22,17 +23,23 @@ class IncrementalIndexBuilder:
         segments_unicode = list(jieba.cut_for_search(sentence))
         return map(lambda x:x.encode("utf8"), segments_unicode)
 
-    def build(self, file_path, out_dir):
+    def build(self, file_path, data_out_dir, index_out_dir):
         xml_dicts = self.__parser.parse(file_path)
         for xml_dict in xml_dicts:
+            (file_abspath, line_i) = self.__parser.dump(xml_dict, data_out_dir)
             title = xml_dict[self.__TITLE_K]
-            link = xml_dict[self.__LINK_K]
             segment_list = self._segment(title)
             for segment in segment_list:
-                self.__index_dict.setdefault(segment,list())
-                self.__index_dict[segment].append((title,link))
+                self.__index_dict.setdefault(segment, list())
+                relative_path = functs.get_relative_path(file_abspath, self.__DATA_ROOT_DIR)
+                if None != relative_path:
+                    self.__index_dict[segment].append("%s#%s" %(relative_path, line_i))
+                else:
+                    self.__index_dict[segment].append("%s#%s" %(file_abspath, line_i))
+                    
+                    
                 if len(self.__index_dict) > self.__INDEX_THRESHOLD:
-                    self.dump(out_dir)
+                    self.dump(index_out_dir)
     
     def dump(self, out_dir):
         lines = str()
@@ -42,11 +49,11 @@ class IncrementalIndexBuilder:
             line = '\t'.join(_list) + '\n'
             lines += line
             
-        self.__index_file_sum += 1
         filename = str(self.__index_file_sum)
         filepath = os.path.join(out_dir, filename)
         functs.dump(lines, filepath)
 
+        self.__index_file_sum += 1
         self.__index_dict = dict()
         pass
     
@@ -55,12 +62,13 @@ class IncrementalIndexBuilder:
         self.dump(out_dir)
         pass
         
-    def run(self, in_dir, out_dir):
+    def run(self, in_dir, data_out_dir, index_out_dir):
         file_paths = functs.get_files(in_dir)
         for file_path in file_paths:
-            self.build(file_path, out_dir)
+            self.build(file_path, data_out_dir, index_out_dir)
             pass
-        self.flush(out_dir)
+        self.__parser.flush(data_out_dir)
+        self.flush(index_out_dir)
         pass
 
 class PrimeIndexBuilder:
@@ -99,8 +107,7 @@ class PrimeIndexBuilder:
                 tmp = line.strip().split('\t')
                 if tmp and len(tmp) >= 2:
                     word = tmp[0]
-                    link_list = tmp[1:]
-                    link_list = map(lambda x:x.strip(), link_list)
+                    link_list = tmp[1:len(tmp)-1] + tmp[len(tmp)-1].strip()
                     self.__index_dict.setdefault(word, list())
                     for link in link_list:
                         if link not in self.__index_dict[word]:
@@ -119,4 +126,4 @@ class PrimeIndexBuilder:
 if __name__ == "__main__":
     #ib = PrimeIndexBuilder()
     ib = IncrementalIndexBuilder()
-    ib.run('./xml','./tmp2')
+    ib.run('./xml','./tmp2','./tmp3')
